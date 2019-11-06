@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+	<title></title>
+	<!-- https://unpkg.com -->
+	<link rel="stylesheet" href="css/estilos.css"/>
+	<link rel="stylesheet" href="css/onsenui.css"/>
+	<link rel="stylesheet" href="css/onsen-css-components.min.css"/>
+	<script src="js/onsenui.min.js"></script>
+	<script type="text/javascript" src="js/angular.min.js"></script>
+	<script src="js/angular-onsenui.js"></script>
+	<script src="js/iconify.min.js"></script>
+	<script type="text/javascript" src="js/ngStorage.min.js"></script>
+	<script type="text/javascript" src="js/tools.js"></script>
+	<script type="text/javascript" src="js/User.js"></script>
+	<script type="text/javascript" src="js/jssLoad.js"></script>
+	<script type="text/javascript" src="$get.js"></script>
+	<script type="text/javascript">
+		var _debug = false;
+
+		var url_api = "http://kavacdigital.ga/onsapp/api/v1/";
+		//url_api = "";//"C:/Users/Public/unexpoapp/api/";
+	</script>
+	<script type="text/javascript">
+		angular.module("app",["onsen","ngStorage"])
+	</script>
+	<script type="text/javascript" src="js/directive/ngFile.js"></script>
+	<script type="text/javascript" src="js/controller/global.js"></script>
+	<script type="text/javascript" src="js/controller/control_login.js"></script>
+	<script type="text/javascript" src="js/controller/control_main.js"></script>
+	<script type="text/javascript" src="js/controller/control_historial.js"></script>
+	<script type="text/javascript" src="js/controller/control_materias.js"></script>
+	<script type="text/javascript" src="js/controller/control_materias2.js"></script>
+	<script type="text/javascript" src="js/controller/control_configuracion.js"></script>
+	<script type="text/javascript" src="js/controller/control_examen.js"></script>
+	<script type="text/javascript" src="js/controller/control_nuevo.js"></script>	
+</head>
+<body ng-controller="control_global">
+	<ons-navigator swipeable id="nav" page="login.html"></ons-navigator>
+
+<!---
+	###############################################################
+	##                                  ###########################
+	##   ####    ####   #   ##  ######  ###########################
+	##  ##  ##  ##  ##  ##  ##  ##      ###########################
+	##  ##      ##  ##  ### ##  ####    ###########################
+	##  ##      ##  ##  ## ###  ####    ###########################
+	##  ##  ##  ##  ##  ##  ##  ##      ###########################
+	##   ####    ####   ##   #  ##      ###########################
+	##                                  ###########################
+	###############################################################
+-->
+
+	<template id="configuracion.html">
+	<ons-page  ng-controller="control_configuracion" ng-class="{'nocturno':$parent.modo_nocturno}">
+		<ons-toolbar class="jss-backgroundColor-#0000ff50">
+			<div class="left">
+				<span style="position:relative;top:10%;left: 10%;">
+					<img ng-click="$parent.logout()" src="img/logo_unexpo/unexpo.png" width="20%">
+				</span>
+			</div>
+			<div class="center">Configuracion</div>
+			<div class="right">
+				<ons-toolbar-button class="right" badge="2">
+					<ons-icon class="iconify" data-icon="ion-navicon" data-inline="false"></ons-icon>
+				</ons-toolbar-button>
+			</div>
+		</ons-toolbar>
+		<ons-card>
+			{{$parent.BDD}}
+			<ons-list>
+				<ons-list-header>
+					Cuenta
+				</ons-list-header>
+				
+				<ons-list-item expandable>
+					Cambio de Clave 
+					<div class="expandable-content">
+						<ons-list>
+							<ons-list-item>
+								<ons-input ng-show="!show1" type="password" placeholder='Clave Anterior' ng-model="clave_vieja"></ons-input>
+								<ons-input ng-show="show1" type="text" placeholder='Clave Anterior' ng-model="clave_vieja"></ons-input>
+								<ons-checkbox class="right" style="font-size: 70%" ng-model="show1">Mostrar</ons-checkbox>
+							</ons-list-item>
+							<ons-list-item>
+								<ons-input ng-show="!show2" type="password" placeholder='Clave Anterior' ng-model="clave_nueva"></ons-input>
+								<ons-input ng-show="show2" type="text" placeholder='Clave Anterior' ng-model="clave_nueva"></ons-input>
+								<ons-checkbox class="right" style="font-size: 70%" ng-model="show2">Mostrar</ons-checkbox>
+							</ons-list-item>
+						</ons-list>
+					</div> 
+				</ons-list-item>
+				<ons-list-header>
+					Tema
+				</ons-list-header>
+				<ons-list-item>
+					Modo Nocturno <ons-switch class="right" ng-model="$parent.modo_nocturno"></ons-switch>
+				</ons-list-item>
+				<ons-list-header>
+					Preferencias
+				</ons-list-header>
+				<ons-list-item>
+					Activar Notificaciones <ons-switch class="right" ng-model="$parent.band_notificaciones"></ons-switch>
+				</ons-list-item>
+				
+			</ons-list>
+		</ons-card>
+		<ons-card>
+			<ons-button ng-click="$parent.goto('main.html')" class="
+				jss-position-relative
+				jss-left-15%
+				jss-display-inline_block
+				jss-width-35%
+				jss-textAlign-center"
+				>Volver</ons-button>
+			<ons-button ng-click="guardarConfig()" class="
+				jss-position-relative
+				jss-left-15%
+				jss-display-inline_block
+				jss-width-35%
+				jss-textAlign-center"
+				>Guardar</ons-button>
+		</ons-card>
+
+	<script type="text/javascript">setTimeout(jssLoad,100)</script>
+	</ons-page>
+</template>
+<!---
+	###############################################################
+	##                                  ###########################
+	##  #    #   ####   ######  ######  ###########################
+	##  ##  ##  ##  ##  ######  ##      ###########################
+	##  ######  ##  ##    ##    ####    ###########################
+	##  # ## #  ######    ##    ####    ###########################
+	##  # ## #  ##  ##    ##    ##      ###########################
+	##  #    #  ##  ##    ##    ######  ###########################
+	##                                  ###########################
+	###############################################################
+-->
+<template id="materias.html">
+	<ons-page  ng-controller="control_materias" ng-class="{'nocturno':$parent.modo_nocturno}">
+		<ons-toolbar class="jss-backgroundColor-#0000ff50">
+			<div class="left">
+				<span style="position:relative;top:10%;left: 10%;">
+					<img ng-click="$parent.logout()" src="img/logo_unexpo/unexpo.png" width="20%">
+				</span>
+			</div>
+			<div class="center">Materias</div>
+			<div class="right">
+				<!--ons-back-button>login</ons-back-button-->
+				<ons-toolbar-button class="right" badge="2">
+					<ons-icon class="iconify" data-icon="ion-navicon" data-inline="false"></ons-icon>
+					<!--ons-icon icon="ion-navicon" style="font-size: 32px; width: 1em"></ons-icon-->
+				</ons-toolbar-button>
+			</div>
+		</ons-toolbar>
+		<ons-card>
+			<ons-list>
+				<ons-list-item expandable ng-click="expandedDel(ev)" ng-repeat="item in Materias">
+					<h5>{{item.nombre}}</h5>
+					<div class="expandable-content">
+						<ons-list>
+							<ons-list-item>
+								<div class="jss-fontWeight-bold left">
+									Profesor: 
+								</div>
+								<div class="right">
+									{{item.profesor.nombre}}
+								</div>
+							</ons-list-item>
+							<ons-list-item>
+								<div class="jss-fontWeight-bold left">
+									Seccion: 
+								</div>
+								<div class="right">
+									{{item.seccion}}
+								</div>
+							</ons-list-item>
+							<ons-list-item>
+								<div class="jss-fontWeight-bold left">
+								 	Puntuacion: 
+								</div>
+								<div class="right">  
+									{{100*nota_acumulada(item)/nota_total(item)|currency:" "}}%
+								</div>
+							</ons-list-item>
+							<ons-list-item>
+								<div class="jss-fontWeight-bold left">
+									Evaluaciones Pendientes: 
+								</div>
+								<div class="right">
+									<a ng-if="1*pendiente(item).num>0" ng-href="#" ng-click="examen(item.nombre, pendiente(item).id)">{{1*pendiente(item).num}}</a>
+									<a ng-if="1*pendiente(item).num==0">{{1*pendiente(item).num}}</a>
+								</div>
+							</ons-list-item>
+						</ons-list>
+					</div>
+				</ons-list-item>
+				<!--ons-list-item expandable>Lab. Quimica</ons-list-item-->
+			</ons-list>
+		</ons-card>
+		<ons-card>
+			<ons-button ng-click="$parent.goto('main.html')" class="
+				jss-left-25% 
+				jss-position-relative
+				jss-width-50%
+				jss-textAlign-center"
+				>Volver</ons-button>
+		</ons-card>
+		<script type="text/javascript">setTimeout(jssLoad,100)</script>
+	</ons-page>
+</template>
+
+<!---
+	###############################################################
+	##                                          ###################
+	##  #    #   ####   ######  ######   ####   ###################
+	##  ##  ##  ##  ##  ######  ##      ##  ##  ###################
+	##  ######  ##  ##    ##    ####       ##   ###################
+	##  # ## #  ######    ##    ####      ##    ###################
+	##  # ## #  ##  ##    ##    ##       ##     ###################
+	##  #    #  ##  ##    ##    ######  ######  ###################
+	##                                          ###################
+	###############################################################
+-->
+<template id="materias_profe.html">
+	<ons-page  ng-controller="control_materias2" ng-class="{'nocturno':$parent.modo_nocturno}">
+		<ons-toolbar class="jss-backgroundColor-#0000ff50">
+			<div class="left">
+				<span style="position:relative;top:10%;left: 10%;">
+					<img ng-click="$parent.logout()" src="img/logo_unexpo/unexpo.png" width="20%">
+				</span>
+			</div>
+			<div class="center">Materias</div>
+			<div class="right">
+				<!--ons-back-button>login</ons-back-button-->
+				<ons-toolbar-button class="right" badge="2">
+					<ons-icon class="iconify" data-icon="ion-navicon" data-inline="false"></ons-icon>
+					<!--ons-icon icon="ion-navicon" style="font-size: 32px; width: 1em"></ons-icon-->
+				</ons-toolbar-button>
+			</div>
+		</ons-toolbar>
+		<ons-card>
+			<ons-list>
+				<ons-list-header>
+					MATERIAS
+					<ons-list-item ng-repeat="item in user.materia">
+						{{item.nombre}}
+						<ons-radio class="right" value="{{item.id}}" name="materiaSelect" ng-model="nuevoExamen.id_materia"></ons-radio>
+					</ons-list-item>
+					<!--ons-list-item>
+						Fisica I
+						<ons-radio class="right" value="Fisica I" name="materiaSelect" ng-model="nuevoExamen.materia"></ons-radio>
+					</ons-list-item>
+					<ons-list-item>
+						Programacion I
+						<ons-radio class="right" value="Programacion I" name="materiaSelect" ng-model="nuevoExamen.materia"></ons-radio>
+					</ons-list-item-->
+				</ons-list-header>
+				<ons-list-item>
+					Tema: <ons-input type="text" class="right" ng-model="nuevoExamen.nombre"></ons-input>
+				</ons-list-item>
+				<ons-list-item>
+					Ponderacion: <ons-input type="number" class="right" ng-model="nuevoExamen.nota"></ons-input>
+				</ons-list-item>
+				<ons-list-item>
+					Fecha: <ons-input type="date" class="right" ng-model="nuevoExamen.fecha"></ons-input>
+				</ons-list-item>
+			</ons-list>
+
+		</ons-card>
+		<ons-card class="jss-textAlign-center">
+			<ons-button ng-click="$parent.goto('main.html')" class="
+				jss-textAlign-center"
+				>Volver</ons-button>
+			<ons-button ng-click="nuevo()" class="
+				jss-textAlign-center"
+				>Nuevo</ons-button>
+		</ons-card>
+		<script type="text/javascript">setTimeout(jssLoad,100)</script>
+	</ons-page>
+</template>
+
+<!---
+	###############################################################
+	##                                          ###################
+	##  #    #  ##  ##  ######  ##  ##   ####   ###################
+	##  ##   #  ##  ##  ##      ##  ##  ##  ##  ###################
+	##  ###  #  ##  ##  ####    ##  ##  ##  ##  ###################
+	##  # ## #  ##  ##  ####     ####   ##  ##  ###################
+	##  #  ###  ##  ##  ##       ####   ##  ##  ###################
+	##  #    #   ####   ######    ##     ####   ###################
+	##                                          ###################
+	###############################################################
+-->
+<template id="nuevo.html">
+	<ons-page  ng-controller="control_nuevo" ng-class="{'nocturno':$parent.modo_nocturno}">
+		<ons-toolbar class="jss-backgroundColor-#0000ff50">
+			<div class="left">
+				<span style="position:relative;top:10%;left: 10%;">
+					<img ng-click="$parent.logout()" src="img/logo_unexpo/unexpo.png" width="20%">
+				</span>
+			</div>
+			<div class="center">Cargar Pregunta</div>
+			<div class="right">
+				<!--ons-back-button>login</ons-back-button-->
+				<ons-toolbar-button class="right" badge="2">
+					<ons-icon class="iconify" data-icon="ion-navicon" data-inline="false"></ons-icon>
+					<!--ons-icon icon="ion-navicon" style="font-size: 32px; width: 1em"></ons-icon-->
+				</ons-toolbar-button>
+			</div>
+		</ons-toolbar>
+		<ons-card>
+			<ons-list>
+				<ons-list-header>
+					Pregunta {{index}}
+				</ons-list-header>
+				<ons-list-item>
+					<ons-input ng-model="pregunta.pregunta" class="center" type="text"></ons-input>
+				</ons-list-item>
+				<ons-list-item>
+					<ons-button ng-click="subir()">
+						Subir Imagen
+						<input type="file" id="upload"  ng-file="img" style="display: none;" />	
+					</ons-button>
+					<img class="right" ng-src="{{img_URI[0]}}" width="50px" />
+				</ons-list-item>
+				<ons-list-header>
+					Respuestas
+				</ons-list-header>
+				<ons-list-item>
+					<ons-input type="text" class="left" placeholder="Respuesta 1" ng-model="pregunta.respuesta_1"></ons-input>
+					<ons-checkbox ng-model="pregunta.respuesta_correcta[0]" value="true" class="right"></ons-checkbox>
+				</ons-list-item>
+				<ons-list-item>
+					<ons-input type="text" class="left" placeholder="Respuesta 2" ng-model="pregunta.respuesta_2"></ons-input>
+					<ons-checkbox ng-model="pregunta.respuesta_correcta[1]" class="right"></ons-checkbox>
+				</ons-list-item>
+				<ons-list-item>
+					<ons-input type="text" class="left" placeholder="Respuesta 3" ng-model="pregunta.respuesta_3"></ons-input>
+					<ons-checkbox ng-model="pregunta.respuesta_correcta[2]" class="right"></ons-checkbox>
+				</ons-list-item>
+				<ons-list-item>
+					<ons-input type="text" class="left" placeholder="Respuesta 4" ng-model="pregunta.respuesta_4"></ons-input>
+					<ons-checkbox ng-model="pregunta.respuesta_correcta[3]" class="right"></ons-checkbox>
+				</ons-list-item>
+				<ons-list-item>
+					Nota: <ons-input type="number" class="right" ng-model="pregunta.nota"></ons-input>
+				</ons-list-item>
+			</ons-list>
+		</ons-card>
+		<ons-card class="jss-textAlign-center">
+			<ons-button ng-click="agregarPregunta()" class="
+				jss-textAlign-center"
+				>Agregar</ons-button>
+			<ons-button ng-click="guardarExamen()" class="
+				jss-textAlign-center jss-backgroundColor-green"
+				>Terminar</ons-button>
+		</ons-card>
+		<script type="text/javascript">setTimeout(jssLoad,100)</script>
+	</ons-page>
+</template>
+<!--
+	###################################################
+	##                                  ###############
+	##  #    #   ####   ######  #   ##  ###############
+	##  ##  ##  ##  ##    ##    ##  ##  ###############
+	##  ######  ##  ##    ##    ### ##  ###############
+	##  # ## #  ######    ##    ## ###  ###############
+	##  # ## #  ##  ##    ##    ##  ##  ###############
+	##  #    #  ##  ##  ######  ##   #  ###############
+	##                                  ###############
+	###################################################
+
+--->
+<template id="main.html">
+	<ons-page id="main" ng-controller="control_main" ng-class="{'nocturno':$parent.modo_nocturno}">
+		<ons-toolbar>
+			<div class="left">
+				<span style="position:relative;top:10%;left: 10%;">
+					<img ng-click="$parent.logout()" src="img/logo_unexpo/unexpo.png" width="20%">
+				</span>
+			</div>
+			<div class="center">Main</div>
+			<div class="right">
+				<!--ons-back-button>login</ons-back-button-->
+				<ons-toolbar-button class="right" badge="2">
+					<ons-icon class="iconify" data-icon="ion-navicon" data-inline="false"></ons-icon>
+				</ons-toolbar-button>
+			</div>
+		</ons-toolbar>
+		<ons-card 
+			class="
+				jss-c-ons!card[type='line']-backgroundColor-gray
+				jss-c-ons!card[type='line']-padding-0px
+				jss-c-ons!card[type='line']-height-2px
+				jss-c-ons!card[type='item']-backgroundColor-lightblue
+				jss-c-ons!card[type='item']-textAlign-center">
+			<ons-card 
+				ng-if="user.tipo == 'alumn'"
+				type="item"
+				ng-click="$parent.goto('materias.html')">
+				<h4 class="jss-fontWeight-bold">MATERIAS [alumn]</h4>
+				<small class="text-muted">Aqui su descripcion</small>
+			</ons-card>
+			<ons-card
+				ng-if="user.tipo == 'profe'"
+				type="item"
+				ng-click="$parent.goto('materias_profe.html')">
+				<h4 class="jss-fontWeight-bold">MATERIAS [profe]</h4>
+				<small class="text-muted">Aqui su descripcion</small>
+			</ons-card>
+			<ons-card type="line"></ons-card>
+			<ons-card 
+				type="item"
+				ng-click="$parent.goto('historial.html')">
+				<h4 class="jss-fontWeight-bold">HISTORIAL</h4>
+				<small class="text-muted">Aqui su descripcion</small>
+			</ons-card>
+			<ons-card type="line"></ons-card>
+			<ons-card 
+				type="item"
+				ng-click="$parent.goto('configuracion.html')">
+				<h4 class="jss-fontWeight-bold">CONFIGURACION</h4>
+				<small class="text-muted">Aqui su descripcion</small>
+			</ons-card>
+		</ons-card>
+		<script type="text/javascript">
+			setTimeout(jssLoad,100)</script>
+	</ons-page>
+</template>
+
+<!--
+	#####################################################
+	##                                                  #
+	##  ##  ##  ######   ####   ######   ####   #####   #
+	##  ##  ##    ##    ##   #    ##    ##  ##  ##  ##  #
+	##  ######    ##     ###      ##    ##  ##  ##  ##  #
+	##  ######    ##       ##     ##    ##  ##  ####    #
+	##  ##  ##    ##    #   ##    ##    ##  ##  ## ##   #
+	##  ##  ##  ######   ####     ##     ####   ##  ##  #
+	##                                                  #
+	#####################################################
+-->
+
+<template id="historial.html">
+	<ons-page ng-controller="control_historial" ng-class="{'nocturno':$parent.modo_nocturno}">
+		<ons-toolbar class="jss-backgroundColor-#0000ff50" >
+			<div class="left">
+				<span style="position:relative;top:10%;left: 10%;">
+					<img ng-click="$parent.logout()" src="img/logo_unexpo/unexpo.png" width="20%">
+				</span>
+			</div>
+			<div class="center">Historial</div>
+			<div class="right">
+				<ons-toolbar-button class="right" badge="2">
+					<ons-icon class="iconify" data-icon="ion-navicon" data-inline="false"></ons-icon>
+				</ons-toolbar-button>
+			</div>
+		</ons-toolbar>
+		<ons-card>
+			<ons-list>
+				<ons-list-header>Ultimos 10 Eventos</ons-list-header>
+				<ons-list-item ng-repeat="evento in $parent.History[$parent.user.user]">
+					<ons-list>
+							{{evento.msj}}	<br/>
+							<div style="font-size: 70%; color:gray;"><i>{{evento.date}}</i></div>
+					</ons-list>
+					
+				</ons-list-item>	
+			</ons-list>
+		</ons-card>
+		<ons-card>
+			<ons-button ng-click="$parent.goto('main.html')" class="
+				jss-left-25% 
+				jss-position-relative
+				jss-width-50%
+				jss-textAlign-center"
+				>Volver</ons-button>
+		</ons-card>
+	<script type="text/javascript">setTimeout(jssLoad,100)</script>
+	</ons-page>
+</template>
+<!--
+	#####################################################
+	##                                          #########
+	##  ##       ####    ####   ######  #   ##  #########
+	##  ##      ##  ##  ##  ##    ##    ##  ##  #########
+	##  ##      ##  ##  ##        ##    ### ##  #########
+	##  ##      ##  ##  ## ###    ##    ## ###  #########
+	##  ##      ##  ##  ##  ##    ##    ##  ##  #########
+	##  ######   ####    ####   ######  ##   #  #########
+	##                                          #########
+	#####################################################
+-->
+
+<template id="login.html">
+	<ons-page id="login"  ng-controller="control_login">
+		<center><img src="img/logo_unexpo/unexpo.png" width="90%"></center>
+		<center><i style="color:black" ng-click="$parent.goto('apiconfig.html')">FH & AR V1.1</i></center>
+		<ons-card  
+			style="text-align: center;">
+			<ons-input 
+				style="background-color: #00000005;"
+				id="usuario" 
+				type="text" 
+				placeholder="Usuario..."
+				min="5"
+				max="20"
+				ng-model="usuario"></ons-input><br><br>
+			<ons-input 
+				style="background-color: #00000005;"
+				id="password" 
+				type="password" 
+				placeholder="Clave..."
+				min="5"
+				max="20"
+				ng-model="clave"></ons-input><br><br>
+
+			<ons-button ng-click="login()">Entrar</ons-button>
+		</ons-card>
+	</ons-page>
+</template>
+<!--
+	#####################################################
+	##                                          #########
+	##  ######  #    #   ####   #    #  ######  #########
+	##  ##      ##  ##  ##  ##  ##  ##  ##      #########
+	##  ####     ###    ##  ##  ######  ####    #########
+	##  ####      ###   ######  # ## #  ####    #########
+	##  ##      ##  ##  ##  ##  #    #  ##      #########
+	##  ######  #    #  ##  ##  #    #  ######  #########
+	##                                          #########
+	#####################################################
+-->
+
+<template id="examen.html">
+	<ons-page id="examen"  ng-controller="control_examen"  ng-class="{'nocturno':$parent.modo_nocturno}">
+		<ons-toolbar class="jss-backgroundColor-#0000ff50" >
+			<div class="left">
+				<span style="position:relative;top:10%;left: 10%;">
+					<img ng-click="$parent.logout()" src="img/logo_unexpo/unexpo.png" width="20%">
+				</span>
+			</div>
+			<div class="center">Examen</div>
+			<div class="right">
+				<ons-toolbar-button class="right" badge="2">
+					<ons-icon class="iconify" data-icon="ion-navicon" data-inline="false"></ons-icon>
+				</ons-toolbar-button>
+			</div>
+		</ons-toolbar>
+		<ons-card  
+			style="text-align: center;">
+			<h4>Examen de {{ nombreMateria( $parent.currentExamen.id_materia )}}</h4>
+			<ons-card ng-show="estado_examen.estado">
+				Fecha Limite: <i>{{$parent.currentExamen.fecha_limite}}</i>
+			</ons-card>
+			<ons-list ng-show="!estado_examen.estado">
+				<ons-list-item>
+					<b class="left">Tema:</b><label class="right">{{$parent.currentExamen.nombre}}</label>
+				</ons-list-item>
+				<ons-list-item>
+					<b class="left">Ponderacion:</b><label class="right">{{$parent.currentExamen.nota}} Pts</label>
+				</ons-list-item>
+				<ons-list-item>
+					<b class="left">Fecha Limite:</b><label class="right">{{$parent.currentExamen.fecha_limite}}</label>
+				</ons-list-item>
+			</ons-list>
+			<ons-list ng-show="estado_examen.estado">
+				<ons-list-header>
+					Pregunta {{index+1}}: {{pregunta.pregunta}}<br/>
+					<img ng-src="{{pregunta.imagen1}}"/>
+				</ons-list-header>
+				<ons-list-item 	ng-show="pregunta.respuesta_1.length>0">
+					{{pregunta.respuesta_1}}
+					<div class="right">
+						<ons-radio ng-if="pregunta.tipo_seleccion=='simple'" 
+							value="{{pregunta.respuesta_1}}" 
+							name="{{pregunta.id}}"></ons-radio>
+						<ons-checkbox ng-if="pregunta.tipo_seleccion=='multiple'" 
+							value="{{pregunta.respuesta_1}}" 
+							name="{{pregunta.id}}"></ons-checkbox>
+					</div>
+				</ons-list-item>
+				<ons-list-item 	ng-show="pregunta.respuesta_2.length>0">
+					{{pregunta.respuesta_2}}
+					<div class="right">
+						<ons-radio ng-if="pregunta.tipo_seleccion=='simple'" 
+							value="{{pregunta.respuesta_2}}" 
+							name="{{pregunta.id}}"></ons-radio>
+						<ons-checkbox ng-if="pregunta.tipo_seleccion=='multiple'" 
+							value="{{pregunta.respuesta_2}}" 
+							name="{{pregunta.id}}"></ons-checkbox>
+					</div>
+				</ons-list-item>
+				<ons-list-item 	ng-show="pregunta.respuesta_3.length>0">
+					{{pregunta.respuesta_3}}
+					<div class="right">
+						<ons-radio ng-if="pregunta.tipo_seleccion=='simple'" 
+							value="{{pregunta.respuesta_3}}" 
+							name="{{pregunta.id}}"></ons-radio>
+						<ons-checkbox ng-if="pregunta.tipo_seleccion=='multiple'" 
+							value="{{pregunta.respuesta_3}}" 
+							name="{{pregunta.id}}"></ons-checkbox>
+					</div>
+				</ons-list-item>
+				<ons-list-item 	ng-show="pregunta.respuesta_4.length>0">
+					{{pregunta.respuesta_4}}
+					<div class="right">
+						<ons-radio ng-if="pregunta.tipo_seleccion=='simple'" 
+							value="{{pregunta.respuesta_4}}" 
+							name="{{pregunta.id}}"></ons-radio>
+						<ons-checkbox ng-if="pregunta.tipo_seleccion=='multiple'" 
+							value="{{pregunta.respuesta_4}}" 
+							name="{{pregunta.id}}"></ons-checkbox>
+					</div>
+				</ons-list-item>
+			</ons-list>
+		</ons-card>
+		<ons-card>
+			<center ng-show="estado_examen.estado">
+				<ons-button ng-click="move(-1)">Atras</ons-button>
+				<ons-button ng-show="index<numeroPreguntas-1" ng-click="move(1)">Siguiente</ons-button>
+				<ons-button 
+					class="jss-backgroundColor-green"
+					ng-show="index==numeroPreguntas-1" 
+					ng-click="enviar()">Enviar</ons-button>
+			</center>
+			<center ng-show="!estado_examen.estado">
+				<ons-button ng-click="goto('materias.html')">Volver</ons-button>
+				<ons-button ng-click="move(1)">Comenzar</ons-button>
+			</center>
+		</ons-card>
+		<script type="text/javascript">setTimeout(jssLoad,100)</script>
+	</ons-page>
+</template>
+<!--
+	#####################################################
+	##                                          #########
+	##          ######          #####           #########
+	##            ##            ##  ##          #########
+	##            ##            ##  ##          #########
+	##            ##            #####           #########
+	##            ##     ###    ##       ###    #########
+	##          ######   ###    ##       ###    #########
+	##                                          #########
+	#####################################################
+-->
+
+<template id="apiconfig.html">
+	<ons-page id="apiconfig"  ng-controller="control_global">
+		<center><img src="img/logo_unexpo/unexpo.png" width="90%"></center>
+		<ons-card  
+			style="text-align: center;">
+			<ons-input 
+				style="background-color: #00000005;"
+				type="text" 
+				ng-model="ip"></ons-input><br>
+			<ons-button ng-click="saveIP()">Guardar IP</ons-button>
+			<ons-button ng-click="$parent.goto('login.html')">Volver</ons-button>
+		</ons-card>
+	</ons-page>
+</template>
+</body>
+</html>

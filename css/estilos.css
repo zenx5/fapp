@@ -1,0 +1,15 @@
+
+/* Estilos para el Modo Nocturno */
+	.nocturno ons-card{
+		background-color: rgba(0, 0, 0, 0.8);
+		color: white;
+	}
+	.nocturno ons-toolbar,
+	.nocturno ons-button{
+		background-color: rgba(255, 255, 0, 1) !important; 
+		color: black  !important;
+	}
+	.nocturno ons-list,.nocturno ons-list ons-list-header{
+		background-color: rgba(100, 100, 100, 1);
+		color: white;
+	}
